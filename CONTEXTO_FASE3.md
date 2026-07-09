@@ -10,7 +10,7 @@ Una IA/persona nueva debe poder retomar desde aquí sin leer el chat.
 ## 1. Resumen ejecutivo
 
 Simulación WCSPH CUDA de un tsunami golpeando el campus UTEC, con colisión física
-real contra el edificio (SDF precomputado) y render Cycles con capa de espuma.
+real contra el edificio (SDF precomputado) y render Cycles.
 
 ```text
 solver CUDA (fase1, SDF boundary)          125 fps efectivos, 4M partículas
@@ -29,13 +29,12 @@ solver CUDA (fase1, SDF boundary)          125 fps efectivos, 4M partículas
 | Cámara | Malla | Espuma | Absorción | Render args (slurm v4) |
 |---|---|---|---|---|
 | `Cam_AereaEpic` | continuous | **NINGUNA** | 0.018 | `"" 0.022 0.018` |
-| `Cam_AzoteaPOV` | granular | foam_cine, radio 0.018 | default (0.045) | `foam_cine 0.018` |
-| `Cam_DetalleImpacto` | granular | foam_cine, radio 0.018 | default | `foam_cine 0.018` |
+| `Cam_AzoteaPOV` | granular | **NINGUNA** | default (0.045) | `"" 0.018` |
+| `Cam_DetalleImpacto` | granular | **NINGUNA** | default | `"" 0.018` |
 
-Veredicto A/B/C (consenso Claude+Codex+usuario, 2026-07-08): en plano aéreo la espuma
-como puntos SIEMPRE lee como ruido/puntillismo (probado con 236k, 60k y 30k puntos, radios
-0.012-0.03); la masa de agua limpia con contorno de splash es lo cinematográfico. La espuma
-solo funciona CERCA de cámara (POV/Detalle), donde el spray vende caos.
+Veredicto final (2026-07-08): la espuma como puntos lee como ruido, esferas o
+puntillismo en todas las cámaras. `07_extract_foam.py` conserva su función de
+separación: quita spray aislado del bulk, pero el render final no dibuja esa capa.
 
 **Recetas de superficie (en `khipu_job_cine_splash_range.slurm`):**
 ```text
@@ -116,10 +115,10 @@ sbatch --qos=a-pregrado --time=08:00:00 scripts/khipu_job_cine_splash_range.slur
 # Renders GPU tras el conteo completo de OBJ:
 sbatch scripts/khipu_job_render_v4.slurm Cam_AereaEpic mesh_cine_continuous_0_724   0   724  1 "" 0.022 0.018
 sbatch scripts/khipu_job_render_v4.slurm Cam_AereaEpic mesh_cine_continuous_725_1449 725 1449 1 "" 0.022 0.018
-sbatch scripts/khipu_job_render_v4.slurm Cam_AzoteaPOV mesh_cine_granular_300_800   300 800  1 foam_cine 0.018
+sbatch scripts/khipu_job_render_v4.slurm Cam_AzoteaPOV mesh_cine_granular_300_800   300 800  1 "" 0.018
 
 # TANDA 3:
-sbatch scripts/khipu_job_render_v4.slurm Cam_DetalleImpacto mesh_cine_granular_300_800 300 800 1 foam_cine 0.018
+sbatch scripts/khipu_job_render_v4.slurm Cam_DetalleImpacto mesh_cine_granular_300_800 300 800 1 "" 0.018
 ```
 
 Args del render slurm: `<Cam> <mesh_dir> <start> <end> <stride> [foam_dir] [foam_radius] [absorption] [out_suffix]`.
@@ -133,7 +132,8 @@ ffmpeg -framerate 60 -start_number 300 -i render_v4_Cam_AzoteaPOV/frame_%06d.png
 ffmpeg -framerate 60 -start_number 300 -i render_v4_Cam_DetalleImpacto/frame_%06d.png -c:v libx264 -pix_fmt yuv420p -crf 17 -movflags +faststart tsunami_detalle.mp4
 ```
 Edición sugerida: aérea como plano de escala (24 s), cortes de azotea/detalle (8 s c/u)
-en el impacto. La espuma fuerte vive en los cortes cercanos; el plano general va limpio.
+en el impacto. Las tres cámaras usan agua limpia; la receta granular conserva el
+detalle geométrico en los cortes cercanos.
 
 ## 8. Coordenadas y convenciones (NO romper)
 

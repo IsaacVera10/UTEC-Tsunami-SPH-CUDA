@@ -36,7 +36,7 @@ cache_cine/frame_XXXXXX.bin
     |
     +--> bulk PLY --> SplashSurf --> OBJ
     |
-    +--> foam PLY --> Geometry Nodes
+    +--> foam PLY --> capa opcional, desactivada en el render final
                          |
                          v
                 Blender Cycles / OptiX
@@ -50,7 +50,7 @@ cache_cine/frame_XXXXXX.bin
 | Fase | Carpeta | Alcance |
 |---|---|---|
 | 1 | `fase1_sph_tsunami/` | Solver WCSPH, SDF, CUDA, SLURM y despliegue |
-| 2 | `fase2_splashsurf/` | Espuma, superficie, escena y render por secuencia |
+| 2 | `fase2_splashsurf/` | Separación de spray, superficie, escena y render |
 | 3 | `fase3/` | Activos Blender y composición final |
 | 4 | `fase4_sdf/` | Limpieza geométrica y volumen de distancia firmado |
 

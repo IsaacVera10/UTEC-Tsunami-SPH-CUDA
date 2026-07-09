@@ -252,14 +252,14 @@ y render (Codex tenía razón). Las dos cosas son independientes.
   cientos de miles de puntos son gratis para Cycles. La decimación (--max-points,
   priorizando aislamiento+altura) es red de seguridad, no la herramienta principal.
 
-### 8.4 El veredicto A/B/C: la espuma es una herramienta de PLANO CERCANO
+### 8.4 Veredicto final: separación sin espuma visible
 Test controlado (mismo frame, aérea): sin espuma / sparse 30k / densa 236k. Ganó
-**sin espuma**, por consenso doble-IA + humano. En plano general los puntos SIEMPRE
+**sin espuma**, por consenso doble-IA + humano. En plano general los puntos siempre
 leen como textura artificial (puntillismo o estática según el radio), y sub-píxel
 (r=0.012) es lo peor: el denoiser lo convierte en sal. La masa de agua limpia con su
-contorno de splash es lo que lee "pesado y gigante". La espuma vive en POV/Detalle,
-donde las gotas cerca de cámara venden caos (y ahí radio 0.018, con emisión 0.07
-para leer blanca en sombra).
+contorno de splash es lo que lee "pesado y gigante". La prueba de azotea confirmó
+el mismo defecto a corta distancia: las gotas parecían esferas suspendidas. La
+entrega conserva la separación bulk/spray, pero omite el point cloud en las tres cámaras.
 
 ### 8.5 Integración de escena: la luz delata lo que falta
 - **Lecho marino**: sin fondo bajo el agua, la losa infinita se ve pálida (la luz

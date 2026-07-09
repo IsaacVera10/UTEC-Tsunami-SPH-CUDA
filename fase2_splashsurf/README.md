@@ -1,4 +1,4 @@
-# Fase 2: superficie, espuma y render
+# Fase 2: superficie, spray y render
 
 ## Propósito
 
@@ -26,8 +26,8 @@ y > 1.6 m
 inside_domain_margin
 ```
 
-La máscara complementaria forma el bulk. El bulk entra en SplashSurf; la espuma
-entra en Geometry Nodes como puntos blancos.
+La máscara complementaria forma el bulk. El bulk entra en SplashSurf. La capa de
+puntos permanece disponible como diagnóstico, pero el render final no la dibuja.
 
 ## Recetas finales
 
@@ -36,8 +36,8 @@ entra en Geometry Nodes como puntos blancos.
 | `continuous` | 0.115 | 3.2 | 2.5 | 0.50 | 30/15 |
 | `granular` | 0.105 | 2.6 | 1.0 | 0.55 | 15/8 |
 
-La cámara aérea usa `continuous` sin espuma. Las cámaras de azotea e impacto usan
-`granular` con espuma de radio `0.018`.
+La cámara aérea usa `continuous`. Las cámaras de azotea e impacto usan `granular`.
+Las tres cámaras omiten la espuma visible.
 
 ## Ejecución
 
@@ -70,7 +70,7 @@ Render de azotea:
 ```bash
 sbatch scripts/khipu_job_render_v4.slurm \
   Cam_AzoteaPOV mesh_cine_granular_300_800 \
-  300 800 1 foam_cine 0.018
+  300 800 1 "" 0.018
 ```
 
 `EJECUCION.md` contiene el manual completo. `LOGICA.md` registra las pruebas A/B/C,

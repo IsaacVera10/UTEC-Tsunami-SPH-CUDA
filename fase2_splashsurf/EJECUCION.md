@@ -4,7 +4,7 @@ Proyecto: **Simulación de tsunami sobre el campus UTEC** · Computer Graphics, 
 Guía de comandos. Para el *porqué* de cada decisión, ver `LOGICA.md`; para la física,
 `fase1_sph_tsunami/INFORME_TECNICO.md`; para el estado/handoff, `CONTEXTO_FASE3.md`.
 
-> **El pipeline v4 corre COMPLETO en Khipu** (sim + mallas + espuma + render). Localmente
+> **El pipeline v4 corre COMPLETO en Khipu** (sim + mallas + separación de spray + render). Localmente
 > solo se genera el `.blend` y se hacen previews de 1 frame.
 
 ---
@@ -105,9 +105,9 @@ Verificar al final: `OBJs cine generados: N / N`.
 # Aérea: SIN espuma, agua clara
 sbatch --qos=a-tesis --time=10:00:00 scripts/khipu_job_render_v4.slurm Cam_AereaEpic mesh_cine_continuous_0_724 0 724 1 "" 0.022 0.018
 sbatch --qos=a-pregrado --time=08:00:00 scripts/khipu_job_render_v4.slurm Cam_AereaEpic mesh_cine_continuous_725_1449 725 1449 1 "" 0.022 0.018
-# POV azotea y Detalle: CON espuma, gotas 0.018, absorción default
-sbatch scripts/khipu_job_render_v4.slurm Cam_AzoteaPOV      mesh_cine_granular_300_800 300 800 1 foam_cine 0.018
-sbatch scripts/khipu_job_render_v4.slurm Cam_DetalleImpacto mesh_cine_granular_300_800 300 800 1 foam_cine 0.018
+# POV azotea y Detalle: granular SIN espuma visible
+sbatch scripts/khipu_job_render_v4.slurm Cam_AzoteaPOV      mesh_cine_granular_300_800 300 800 1 "" 0.018
+sbatch scripts/khipu_job_render_v4.slurm Cam_DetalleImpacto mesh_cine_granular_300_800 300 800 1 "" 0.018
 ```
 
 Salida: `render_v4_<Camara><suffix>/frame_*.png` (1080p, 128 samples). Reanudable.
@@ -163,7 +163,7 @@ con el pipeline completo y revisarlos a ojo. Cada bug de look se caza aquí en m
 | OOM en splash aun serial | La memoria escala con SMOOTH, no con CUBE. Bajar smooth (4.0→3.2 validado). |
 | `$'\r': command not found` en Khipu | CRLF. `sed -i 's/\r$//' <archivo>` (el deploy lo hace solo). |
 | Render: esfera blanca dentro de gota de vidrio | Splashsurf malló el spray. Falta la separación bulk/spray del 07 (`--bulk-output`). |
-| Espuma = alfombra/estática en la aérea | No usar espuma en planos generales (veredicto A/B/C). En cercanas: `--min-y 1.6` + radio ≥0.018. |
+| Espuma = esferas/estática | Omite `--foam-dir`. El render final no dibuja la capa de puntos. |
 | Agua negra vista desde arriba | Absorción 0.045 sobre 10+ m. Override `--absorption 0.018` en esa cámara. |
 | Mar circundante pálido vs dominio oscuro ("isla") | Falta el Seabed (el 06 lo crea) o losa por debajo del nivel (tope 2.1). |
 | Blender escribe en `C:\...` inesperado | Ruta de salida relativa. SIEMPRE absolutas con Blender headless. |
