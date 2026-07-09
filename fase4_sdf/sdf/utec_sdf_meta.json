@@ -1,0 +1,15 @@
+{
+  "origin": [
+    36.0,
+    -2.0,
+    1.4
+  ],
+  "dims": [
+    75,
+    75,
+    106
+  ],
+  "voxel": 0.25,
+  "order": "x_slowest_z_fastest  (idx = (ix*dimY + iy)*dimZ + iz)",
+  "sign": "negative_inside"
+}
